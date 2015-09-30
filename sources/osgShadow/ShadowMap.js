@@ -380,7 +380,7 @@ define( [
 
         setShadowedScene: function ( shadowedScene ) {
             ShadowTechnique.prototype.setShadowedScene.call( this, shadowedScene );
-            this._receivingStateset = this._shadowedScene.getOrCreateStateSet();
+            this._receivingStateset = this._shadowedScene.getReceivingStateSet();
             this.dirty();
         },
 
