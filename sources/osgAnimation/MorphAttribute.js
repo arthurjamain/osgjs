@@ -66,7 +66,21 @@ define( [
                 return;
 
             var uniformMap = this.getOrCreateUniforms();
-            Vec4.copy( this._targetWeights, uniformMap.uTargetWeights.get() );
+            var tweights = this._targetWeights;
+
+            // normalize (L1 norm) weights
+            var sum = 0;
+            var i = 0;
+            var nb = this._nbTarget;
+            for ( i = 0; i < nb; ++i ) {
+                sum += Math.abs( tweights[ i ] );
+            }
+
+            var uTWeights = uniformMap.uTargetWeights.get();
+            for ( i = 0; i < nb; ++i ) {
+                uTWeights[ i ] = tweights[ i ] / sum;
+            }
+
             uniformMap.uTargetWeights.dirty();
 
             this.setDirty( false );
