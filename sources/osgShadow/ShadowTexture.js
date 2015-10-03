@@ -129,7 +129,7 @@ define( [
             this.setDirty( false );
         },
 
-        getHash: function () {
+        getHashString: function () {
 
             return this.getTypeMember() + '_' + this._lightUnit + '_' +
                 this._type;

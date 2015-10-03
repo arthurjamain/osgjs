@@ -7,6 +7,7 @@ define( [
 
     var StateAttribute = function () {
         Object.call( this );
+        this._hash = MACROUTILS.hashComputeCodeFromString( this.attributeType );
         this._dirty = true;
     };
 
@@ -22,7 +23,10 @@ define( [
         },
 
         setDirty: function ( dirty ) {
+
+            if ( !dirty ) this._hash = MACROUTILS.hashComputeCodeFromString( this.getHashString() );
             this._dirty = dirty;
+
         },
 
         getType: function () {
@@ -33,7 +37,9 @@ define( [
             return this.attributeType;
         },
 
-        apply: function () {},
+        apply: function () {
+            this.dirty( false );
+        },
 
         // getHash is used by the compiler to know if a change in a StateAttribute
         // must trigger a shader build
@@ -42,9 +48,14 @@ define( [
         // but if you change a type or representation of your StateAttribute, then it should
         // if it impact the rendering.
         // check other attributes for examples
-        getHash: function () {
+        getHashString: function () {
             return this.getTypeMember();
+        },
+        // return int hash
+        getHash: function () {
+            return this._hash;
         }
+
 
     } ), 'osg', 'StateAttribute' );
 

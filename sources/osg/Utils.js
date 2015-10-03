@@ -226,5 +226,59 @@ define( [
 
     } )();
 
+    Utils.hashComputeCodeFromString = function ( str ) {
+
+        var hash = 0;
+        var chara = 0;
+
+        if ( str === undefined || str.length === 0 ) {
+            return hash;
+        }
+
+        for ( var i = 0; i < str.length; i++ ) {
+
+            chara = str.charCodeAt( i );
+            /*jshint bitwise: false */
+            hash = ( ( hash << 5 ) - hash ) + chara;
+            hash = hash & hash; // Convert to 32bit integer
+            /*jshint bitwise: true */
+
+        }
+
+        if ( hash < 0 ) {
+            hash = -hash;
+        }
+
+        return hash;
+
+    };
+
+    Utils.hashComputeCodeFromIntList = function ( intList ) {
+
+        var hash = 0;
+        var intAt = 0;
+
+        if ( intList === undefined || intList.length === 0 ) {
+            return hash;
+        }
+
+        for ( var i = 0; i < intList.length; i++ ) {
+
+            intAt = intList[ i ];
+            /*jshint bitwise: false */
+            hash = ( ( hash << 5 ) - hash ) + intAt;
+            hash = hash & hash; // Convert to 32bit integer
+            /*jshint bitwise: true */
+
+        }
+
+        if ( hash < 0 ) {
+            hash = -hash;
+        }
+
+        return hash;
+
+    };
+
     return Utils;
 } );

@@ -33,7 +33,7 @@ define( [
             if ( !this._shadowReceiveAttribute ) return undefined; // test here because of cloneType
             return this._shadowReceiveAttribute.getAlgorithm();
         },
-        getHash: function () {
+        getHashString: function () {
             return 'ShadowCast' + this._enable + this._shadowReceiveAttribute.getAlgorithm() + this._shadowReceiveAttribute.getPrecision();
         },
         // need a isEnabled to let the ShaderGenerator to filter

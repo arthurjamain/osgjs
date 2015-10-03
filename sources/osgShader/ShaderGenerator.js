@@ -4,9 +4,10 @@ define( [
     'osg/Program',
     'osg/Shader',
     'osg/Map',
+    'osg/Utils',
     'osgShader/Compiler',
     'osgShader/ShaderProcessor'
-], function ( Notify, Light, Program, Shader, Map, Compiler, ShaderProcessor ) {
+], function ( Notify, Light, Program, Shader, Map, MACROUTILS, Compiler, ShaderProcessor ) {
     'use strict';
 
     // this is the list of attributes type we support by default to generate shader
@@ -32,6 +33,7 @@ define( [
 
         // ShaderCompiler Object to instanciate
         this._ShaderCompiler = Compiler;
+        this._hashStack = [];
     };
 
     ShaderGenerator.prototype = {
@@ -91,7 +93,7 @@ define( [
         // get actives attribute that comes from state
         getActiveAttributeList: function ( state, list ) {
 
-            var hash = '';
+
             var attributeMap = state.attributeMap;
             var attributeMapKeys = attributeMap.getKeys();
 
@@ -105,18 +107,17 @@ define( [
                     continue;
 
                 if ( attr.getHash ) {
-                    hash += attr.getHash();
+                    this.pushToHashStack( attr.getHash() );
                 } else {
-                    hash += attr.getType();
+                    this.pushToHashStack( attr.hashComputeCode( attr.getType() ) );
                 }
                 list.push( attr );
             }
-            return hash;
+
         },
 
         // get actives texture attribute that comes from state
         getActiveTextureAttributeList: function ( state, list ) {
-            var hash = '';
             var attributeMapList = state.textureAttributeMapList;
             var i, l;
 
@@ -145,14 +146,13 @@ define( [
                         continue;
 
                     if ( attr.getHash ) {
-                        hash += attr.getHash();
+                        this.pushToHashStack( attr.getHash() );
                     } else {
-                        hash += attr.getType();
+                        this.pushToHashStack( attr.hashComputeCode( attr.getType() ) );
                     }
                     list[ i ].push( attr );
                 }
             }
-            return hash;
         },
 
         getActiveUniforms: function ( state, attributeList, textureAttributeList ) {
@@ -195,6 +195,18 @@ define( [
             return new Map( uniforms );
         },
 
+
+        pushToHashStack: function ( hash ) {
+
+            if ( this._hashStack.current === this._hashStack.length ) {
+                this._hashStack.push( hash );
+            } else {
+                this._hashStack[ this._hashStack.current ] = hash;
+            }
+            this._hashStack.current++;
+
+        },
+
         getOrCreateProgram: ( function () {
             // TODO: double check GC impact of this stack
             // TODO: find a way to get a hash dirty/cache on stateAttribute
@@ -203,13 +215,17 @@ define( [
 
             return function ( state ) {
                 // extract valid attributes
-                var hash = '';
+
+                this._hashStack.current = 0;
+
                 attributes.length = 0;
                 textureAttributes.length = 0;
-                hash += this.getActiveAttributeList( state, attributes );
-                hash += this.getActiveTextureAttributeList( state, textureAttributes );
+                this.getActiveAttributeList( state, attributes );
+                this.getActiveTextureAttributeList( state, textureAttributes );
 
+                var hash = MACROUTILS.hashComputeCodeFromIntList( this._hashStack );
                 var cache = this._cache.get( hash );
+
                 if ( cache !== undefined ) {
                     return cache;
                 }

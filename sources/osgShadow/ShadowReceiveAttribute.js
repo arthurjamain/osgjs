@@ -303,7 +303,7 @@ define( [
             Notify.log( 'ShadowAttribute.isEnable() is deprecated, use isEnabled() instead' );
             return this.isEnabled();
         },
-        getHash: function () {
+        getHashString: function () {
 
             return this.getTypeMember() + '_' + this.getAlgorithm() + '_' + this.getKernelSizePCF() + '_' + this.getFakePCF() + '_' + this.getRotateOffset();
 

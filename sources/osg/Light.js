@@ -74,7 +74,7 @@ define( [
             return prefix + '_uniform_' + name;
         },
 
-        getHash: function () {
+        getHashString: function () {
             return this.getTypeMember() + this.getLightType() + this.isEnabled().toString();
         },
 

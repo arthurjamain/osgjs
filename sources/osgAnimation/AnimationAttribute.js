@@ -71,7 +71,7 @@ define( [
         isEnabled: function () {
             return this._enable;
         },
-        getHash: function () {
+        getHashString: function () {
             // bonesize is important, as the shader itself
             // has a different code and uniform are not shared
             // geoms have each their own bones matrix palette
