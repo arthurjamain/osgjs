@@ -1223,7 +1223,7 @@ define( [
             };
         } )(),
 
-        scale : function(x, y, z, m, res){
+        scale: function ( x, y, z, m, res ) {
             if ( res === undefined ) {
                 Notify.warn( 'no matrix destination !' );
                 res = Matrix.create();
@@ -1233,9 +1233,9 @@ define( [
             // which is in place scale
             // less often scale to new matrix
             // is less optimized
-            if (m !== res){
+            if ( m !== res ) {
                 // fill CPU cache L1
-                Matrix.copy(m, res);
+                Matrix.copy( m, res );
             }
 
             res[ 0 ] *= x;
