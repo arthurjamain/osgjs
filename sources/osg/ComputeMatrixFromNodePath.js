@@ -6,12 +6,12 @@ define( [
     'use strict';
 
     // TODO: GC PERF: add a result Matrix Parameter.
-    var computeLocalToWorld = function ( nodePath, ignoreCameras ) {
+    var computeLocalToWorld = function ( nodePath, ignoreCameras, userMatrix ) {
 
         var ignoreCamera = ignoreCameras;
         if ( ignoreCamera === undefined ) ignoreCamera = true;
 
-        var matrix = Matrix.create();
+        var matrix = userMatrix || Matrix.create();
 
         var j = 0;
         if ( ignoreCamera ) {
